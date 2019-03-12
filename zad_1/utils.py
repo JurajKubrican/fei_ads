@@ -10,7 +10,7 @@ def add_to_log(depth, word):
         tree_print[depth] = [word]
 
 
-def print_log():
+def print_tree():
     for v in tree_print.values():
         print(v)
 

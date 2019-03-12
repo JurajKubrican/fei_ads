@@ -1,7 +1,7 @@
 import collections
 
-from tree import KeyNode, DummyNode
-from utils import add_to_log, print_log, print_matrix
+from zad_1.tree import KeyNode, DummyNode
+from zad_1.utils import add_to_log, tree_print, print_tree, print_matrix
 
 
 def load_it(file):
@@ -49,15 +49,16 @@ def split_it(freq_all, in_data):
     return d_v, k_v, d_n, k_n
 
 
+# alg podla knihy
 def optimize_it(dummy_probs, key_probs):
     n = len(key_probs) + 1
     e = dict()
     w = dict()
     root_node = dict()
 
-    for i in range(1, n + 1):  # naplni diagonalu pravdepodobnostami dummy klucov
+    for i in range(1, n + 1):
         w[(i, i - 1)] = dummy_probs[i - 1]
-        e[(i, i - 1)] = dummy_probs[i - 1]  # weights  podstromu
+        e[(i, i - 1)] = dummy_probs[i - 1]
 
     for l in range(1, n):
         for i in range(1, n - l + 1):
@@ -76,7 +77,6 @@ def optimize_it(dummy_probs, key_probs):
 
 def grow_it(start_index, end_index, root_data, dummy_nodes, key_nodes, depth=0):
     root_index = root_data[(start_index, end_index - 1)]
-    # print(str(start_index) + " to " + str(end_index))
     subtree = key_nodes[root_index]
 
     add_to_log(depth, subtree.word)
@@ -96,16 +96,20 @@ def grow_it(start_index, end_index, root_data, dummy_nodes, key_nodes, depth=0):
     return subtree
 
 
-freqAll, inData = load_it("./dictionary.txt")
-
-dummy, keys, dummyNodes, keyNodes = split_it(freqAll, inData)
-
-root, e_val = optimize_it(dummy, keys)
-
-sekvoia = grow_it(1, len(keyNodes) + 1, root, dummyNodes, keyNodes)
-
-print("Proemerny pocet vyhladanani" + str(e_val))
-
+# Where the magic happens
 
 def pocet_porovnani(word):
     return sekvoia.get_word(word)
+
+
+freqAll, inData = load_it("./dictionary.txt")
+dummy, keys, dummyNodes, keyNodes = split_it(freqAll, inData)
+root, e_val = optimize_it(dummy, keys)
+sekvoia = grow_it(1, len(keyNodes) + 1, root, dummyNodes, keyNodes)
+
+print("Priemerny pocet vyhladanani: " + str(e_val))
+print("Hlbka stromu: " + str(len(tree_print)))
+print("Struktura stromu: ")
+print_tree()
+
+print("Pocet porovnani pre ZOLTAN: " + str(pocet_porovnani("zoltan")))
