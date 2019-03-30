@@ -40,7 +40,6 @@ def do_the_thing(in_data, max_w, max_f):
         item = in_data[index]
         # excluding item with index
         new_state = states[index - 1].copy()
-        print("index: {0}, size: {1}".format(index, len(new_state)))
 
         new_state.extend(addition_tuple_to_list(new_state.copy(), item))
 
@@ -70,7 +69,7 @@ def do_the_thing(in_data, max_w, max_f):
             last_item = item
 
         states[index] = clean_state
-        # print(clean_state)
+        print("index: {0}, size: {1}".format(index, len(clean_state)))
     return states
 
 
@@ -80,16 +79,20 @@ def print_knapsack(states, items):
     res = []
     best = row[-1]
     print(best[0])
-    checksum = 0
-    for row_index in range(max_index, 0, -1):
+    checksum_c = 0
+    checksum_w = 0
+    checksum_f= 0
+    for row_index in range(max_index , 0, -1):
         if best not in states[row_index - 1]:
             best = (best[0] - items[row_index][0], best[1] - items[row_index][1], best[2] - items[row_index][2],)
-            res.append(row_index)
-            checksum += items[row_index][0]
+            res.append(row_index+1)
+            checksum_c += items[row_index][0]
+            checksum_w += items[row_index][1]
+            checksum_f += items[row_index][2]
     print(len(res))
     for _, s in enumerate(res):
         print(s)
-    print(checksum)
+    print([checksum_c,checksum_w,checksum_f])
     return res
 
 
