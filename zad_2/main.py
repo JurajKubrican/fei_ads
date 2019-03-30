@@ -1,3 +1,6 @@
+from random import randint
+
+
 def load_it(file):
     file = open(file)
 
@@ -37,11 +40,12 @@ def do_the_thing(in_data, max_w, max_f):
         item = in_data[index]
         # excluding item with index
         new_state = states[index - 1].copy()
+        print("index: {0}, size: {1}".format(index, len(new_state)))
 
         new_state.extend(addition_tuple_to_list(new_state.copy(), item))
 
         new_state = list(dict.fromkeys(new_state))
-        new_state = sorted(new_state, key=lambda x: (x[0] + x[1] * .1 + x[2] * .01))
+        new_state = sorted(new_state, key=lambda x: (x[0] * 1000000 + x[1] * 1000 + x[2]))
 
         last_item = (-1, -1, -1)
         clean_state = new_state.copy()
@@ -50,21 +54,23 @@ def do_the_thing(in_data, max_w, max_f):
                 clean_state.remove(item)
                 continue
 
-            if last_item[1] > item[1] and last_item[2] > item[2] and last_item in clean_state:
-                clean_state.remove(last_item)
-                continue
-
             if last_item[0] == item[0]:
+                if last_item[1] < item[1] and last_item[2] < item[2]:
+                    clean_state.remove(item)
+                    continue
+
                 if last_item[1] == item[1]:
                     clean_state.remove((last_item[0], last_item[1], max(last_item[2], item[2])))
+                    continue
 
-                elif last_item[2] == item[2]:
+                if last_item[2] == item[2]:
                     clean_state.remove((last_item[0], max(last_item[1], item[1]), last_item[2]))
+                    continue
 
             last_item = item
 
         states[index] = clean_state
-        print(clean_state)
+        # print(clean_state)
     return states
 
 
@@ -73,16 +79,34 @@ def print_knapsack(states, items):
     row = states[max_index]
     res = []
     best = row[-1]
-    for row_index in range(max_index, 1, -1):
+    print(best[0])
+    checksum = 0
+    for row_index in range(max_index, 0, -1):
         if best not in states[row_index - 1]:
             best = (best[0] - items[row_index][0], best[1] - items[row_index][1], best[2] - items[row_index][2],)
             res.append(row_index)
-    print(res)
+            checksum += items[row_index][0]
+    print(len(res))
+    for _, s in enumerate(res):
+        print(s)
+    print(checksum)
     return res
 
 
-source_data, bx, cx = load_it("./zad3.txt")
+source_data, bx, cx = load_it("./zadanie2data2.txt")
 
 sx = do_the_thing(source_data, bx, cx)
 
 print_knapsack(sx, source_data)
+
+
+def generate():
+    out = ['100', '100', '10']
+    for i in range(1, 101):
+        out.append('{0} {1} {2} {3}'.format(i, randint(1, 30), randint(1, 10), randint(0, 1)))
+
+    with open('big_in.txt', 'w') as f:
+        for item in out:
+            f.write("%s\n" % item)
+
+# generate()
