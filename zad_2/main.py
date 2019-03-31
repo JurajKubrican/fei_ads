@@ -74,26 +74,29 @@ def do_the_thing(in_data, max_w, max_f):
 
 
 def print_knapsack(states, items):
-    max_index = max(states.keys())
-    row = states[max_index]
-    res = []
-    best = row[-1]
-    print(best[0])
-    checksum_c = 0
-    checksum_w = 0
-    checksum_f= 0
-    for row_index in range(max_index , 0, -1):
-        if best not in states[row_index - 1]:
-            best = (best[0] - items[row_index][0], best[1] - items[row_index][1], best[2] - items[row_index][2],)
-            res.append(row_index+1)
-            checksum_c += items[row_index][0]
-            checksum_w += items[row_index][1]
-            checksum_f += items[row_index][2]
-    print(len(res))
-    for _, s in enumerate(res):
-        print(s)
-    print([checksum_c,checksum_w,checksum_f])
-    return res
+    with open('out.txt', 'w') as f:
+        max_index = max(states.keys())
+        row = states[max_index]
+        res = []
+        best = row[-1]
+        print(best[0])
+        f.write("%s\n" % best[0])
+        checksum_c = 0
+        checksum_w = 0
+        checksum_f = 0
+        for row_index in range(max_index, 0, -1):
+            if best not in states[row_index - 1]:
+                best = (best[0] - items[row_index][0], best[1] - items[row_index][1], best[2] - items[row_index][2],)
+                res.append(row_index + 1)
+                checksum_c += items[row_index][0]
+                checksum_w += items[row_index][1]
+                checksum_f += items[row_index][2]
+        print(len(res))
+        f.write("%s\n" % len(res))
+        for _, s in enumerate(res):
+            f.write("%s\n" % s)
+        print([checksum_c, checksum_w, checksum_f])
+        return res
 
 
 source_data, bx, cx = load_it("./zadanie2data2.txt")
