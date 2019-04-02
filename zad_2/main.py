@@ -99,7 +99,7 @@ def print_knapsack(states, items):
         return res
 
 
-source_data, bx, cx = load_it("./zadanie2data2.txt")
+source_data, bx, cx = load_it("./zadanie2data3.txt")
 
 sx = do_the_thing(source_data, bx, cx)
 
